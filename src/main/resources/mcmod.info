@@ -1,0 +1,17 @@
+[
+{
+  "modid": "antibuilder",
+  "name": "Anti Builder",
+  "description": "Anti-Builder/protection block for admins & map makers",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/cheeseum-mods/AntiBuilder",
+  "updateUrl": "",
+  "authors": ["Cheeseum"],
+  "credits": "",
+  "logoFile": "",
+  "requiredMods": ["Forge@[10.13.2.1277,]"],
+  "screenshots": [],
+  "dependencies": []
+}
+]
