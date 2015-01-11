@@ -174,7 +174,7 @@ public class TileEntityAntiBuilder extends TileEntity {
 		this.offsets.zPos = offsetsTag.getByte("zPos");
 		
 		int blockId = tagCompound.getInteger("facadeBlockId");
-		if (blockId != 0) {
+		if (blockId > 0) {
 			this.facadeBlock = Block.getBlockById(blockId);
 			this.facadeMeta = tagCompound.getInteger("facadeMeta");
 		}
