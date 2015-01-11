@@ -11,13 +11,13 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
-public class AntiBuilderMessageUpdate implements IMessage {
+public class AntiBuilderMsgUpdate implements IMessage {
 	public TileEntityAntiBuilder tileEntity;
 	
-	public AntiBuilderMessageUpdate() {
+	public AntiBuilderMsgUpdate() {
 	}
 	
-	public AntiBuilderMessageUpdate(TileEntityAntiBuilder tileEntity) {
+	public AntiBuilderMsgUpdate(TileEntityAntiBuilder tileEntity) {
 		this.tileEntity = tileEntity;
 	}
 	
@@ -56,9 +56,9 @@ public class AntiBuilderMessageUpdate implements IMessage {
 		buf.writeByte(this.tileEntity.offsets.zPos);
 	}
 	
-	public static class Handler implements IMessageHandler<AntiBuilderMessageUpdate, IMessage> {
+	public static class Handler implements IMessageHandler<AntiBuilderMsgUpdate, IMessage> {
 		@Override
-		public IMessage onMessage(AntiBuilderMessageUpdate message,	MessageContext ctx) {
+		public IMessage onMessage(AntiBuilderMsgUpdate message,	MessageContext ctx) {
 			return null;
 		}
 		

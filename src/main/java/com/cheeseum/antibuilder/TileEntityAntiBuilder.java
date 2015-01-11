@@ -3,10 +3,14 @@ package com.cheeseum.antibuilder;
 import java.util.Iterator;
 import java.util.List;
 
+import com.cheeseum.antibuilder.network.AntiBuilderMsgPreventBuild;
+
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,6 +19,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.ChunkPosition;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.event.world.ExplosionEvent;
@@ -67,7 +72,15 @@ public class TileEntityAntiBuilder extends TileEntity {
 				&& this.zCoord - offsets.zNeg <= z && this.zCoord + offsets.zPos >= z
 				&& this.yCoord - offsets.yNeg <= y && this.yCoord + offsets.yPos >= y;
 	}
-	
+
+	// used to notify the client of a building prevention, used for particle spawning
+	protected void notifyPreventBuild (World world, int x, int y, int z) {
+		AntiBuilder.network.sendToAllAround(
+			new AntiBuilderMsgPreventBuild(x, y, z),
+			new TargetPoint(world.provider.dimensionId, x, y, z, 64)
+		);
+	}
+
 	@SubscribeEvent
 	public boolean onBlockBreakEvent(BlockEvent.BreakEvent e) {
 		if (e.block instanceof BlockAntiBuilder) {
@@ -78,6 +91,7 @@ public class TileEntityAntiBuilder extends TileEntity {
 					&& !AntiBuilder.breakWhitelist.isBlockWhitelisted(e.block, e.blockMetadata)) {
 				if (p != null && !p.capabilities.isCreativeMode) {
 					e.setCanceled(true);
+					this.notifyPreventBuild(e.world, e.x, e.y, e.z);
 				}
 			}
 		}
@@ -95,6 +109,7 @@ public class TileEntityAntiBuilder extends TileEntity {
 					&& !AntiBuilder.placeWhitelist.isBlockWhitelisted(e.block, e.blockMetadata)) {
 				if (p != null && !p.capabilities.isCreativeMode) {
 					e.setCanceled(true);
+					this.notifyPreventBuild(e.world, e.x, e.y, e.z);
 				}
 			}
 		}
@@ -113,6 +128,7 @@ public class TileEntityAntiBuilder extends TileEntity {
 					&& !AntiBuilder.placeWhitelist.isBlockWhitelisted(e.block, e.blockMetadata)) {
 				if (p != null && !p.capabilities.isCreativeMode) {
 					e.setCanceled(true);
+					this.notifyPreventBuild(e.world, e.x, e.y, e.z);
 				}
 			}
 		}
@@ -128,16 +144,18 @@ public class TileEntityAntiBuilder extends TileEntity {
 			Iterator<ChunkPosition> it = affectedBlocks.iterator();
 			while (it.hasNext()) {
 				ChunkPosition cp = it.next();
-				if (isBlockInRange(cp.chunkPosX, cp.chunkPosY, cp.chunkPosZ)
-					&& !AntiBuilder.breakWhitelist.isBlockWhitelisted(
-							e.world.getBlock(cp.chunkPosX, cp.chunkPosY, cp.chunkPosZ),
-							e.world.getBlockMetadata(cp.chunkPosX, cp.chunkPosY, cp.chunkPosZ))) {
-					// FIXME: add block whitelist
-					it.remove();
+				if (isBlockInRange(cp.chunkPosX, cp.chunkPosY, cp.chunkPosZ)) {
+					Block block = e.world.getBlock(cp.chunkPosX, cp.chunkPosY, cp.chunkPosZ);
+					int meta = e.world.getBlockMetadata(cp.chunkPosX, cp.chunkPosY, cp.chunkPosZ);
+					if (!AntiBuilder.breakWhitelist.isBlockWhitelisted(block, meta)) {
+						it.remove();
+						if (block.getMaterial() != Material.air){ 
+							this.notifyPreventBuild(e.world, cp.chunkPosX, cp.chunkPosY, cp.chunkPosZ);
+						}
+					}
 				}
 			}
 		}
-		//affectedBlocks.clear();
 		return true; 
 	}
 

@@ -2,7 +2,7 @@ package com.cheeseum.antibuilder.gui;
 
 import com.cheeseum.antibuilder.AntiBuilder;
 import com.cheeseum.antibuilder.TileEntityAntiBuilder;
-import com.cheeseum.antibuilder.network.AntiBuilderMessageUpdate;
+import com.cheeseum.antibuilder.network.AntiBuilderMsgUpdate;
 
 import cpw.mods.fml.client.config.GuiSlider;
 
@@ -81,7 +81,7 @@ public class GuiAntiBuilderBlock extends GuiScreen {
 			}
 			
 			this.teAntiBuilder.offsets = this.offsetData;
-			AntiBuilder.network.sendToServer(new AntiBuilderMessageUpdate(this.teAntiBuilder));
+			AntiBuilder.network.sendToServer(new AntiBuilderMsgUpdate(this.teAntiBuilder));
 			this.mc.thePlayer.closeScreen();
 		} else if (button.id == ELEMENTS.CANCELBTN.ordinal()) {
 			this.mc.thePlayer.closeScreen();

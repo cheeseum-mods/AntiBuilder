@@ -20,7 +20,8 @@ import org.apache.logging.log4j.Logger;
 import com.cheeseum.antibuilder.client.BlockAntiBuilderRenderer;
 import com.cheeseum.antibuilder.common.CommonProxy;
 import com.cheeseum.antibuilder.gui.AntiBuilderGuiHandler;
-import com.cheeseum.antibuilder.network.AntiBuilderMessageUpdate;
+import com.cheeseum.antibuilder.network.AntiBuilderMsgPreventBuild;
+import com.cheeseum.antibuilder.network.AntiBuilderMsgUpdate;
 
 import scala.reflect.internal.Trees.This;
 
@@ -85,7 +86,8 @@ public class AntiBuilder
        
         // Network Handlers
         network = NetworkRegistry.INSTANCE.newSimpleChannel("AntiBuilder");
-        network.registerMessage(AntiBuilderMessageUpdate.Handler.class, AntiBuilderMessageUpdate.class, 0, Side.SERVER);
+        network.registerMessage(AntiBuilderMsgUpdate.Handler.class, AntiBuilderMsgUpdate.class, 0, Side.SERVER);
+        network.registerMessage(AntiBuilderMsgPreventBuild.Handler.class, AntiBuilderMsgPreventBuild.class, 0, Side.CLIENT);
         
         // Register GUI(s)
         NetworkRegistry.INSTANCE.registerGuiHandler(this.instance, new AntiBuilderGuiHandler());

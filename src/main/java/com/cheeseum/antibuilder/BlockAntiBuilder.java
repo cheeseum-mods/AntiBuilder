@@ -72,15 +72,21 @@ public class BlockAntiBuilder extends BlockContainer {
 		return BlockAntiBuilderRenderer.antibuilderModel;
 	}
 
-	@Override
-	public void randomDisplayTick(World world, int x, int y, int z, Random random) {
+	public static void spawnRandomParticles (World world, int x, int y, int z, Random random) {
 		double dx = 0.5 + x + random.nextFloat() - 0.5;
-		double dy = 0.5 + y + random.nextFloat() - 0.5;
+		double dy = 0.5 + y + random.nextFloat() * 2.0 - 1.0;
 		double dz = 0.5 + z + random.nextFloat() - 0.5;
 		double v = random.nextFloat() * 0.2 - 0.1;
 		
 		world.spawnParticle("largesmoke", dx, dy, dz, v, v, v);
 		world.spawnParticle("witchMagic", dx, dy, dz, v, v, v);
 		world.spawnParticle("witchMagic", dx, dy, dz, v, v, v);
+	}
+
+	@Override
+	public void randomDisplayTick(World world, int x, int y, int z, Random random) {
+		for (int i=0; i<3; i++) {
+			BlockAntiBuilder.spawnRandomParticles(world, x, y, z, random);
+		}
 	}
 }
