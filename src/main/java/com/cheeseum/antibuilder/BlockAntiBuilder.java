@@ -11,6 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -49,7 +50,11 @@ public class BlockAntiBuilder extends BlockContainer {
 				}
 			} else {
 				Block heldBlock = Block.getBlockFromItem(heldItem.getItem());
-				if (heldBlock != null && !(heldBlock instanceof BlockAntiBuilder)) { //&& heldBlock.isBlockNormalCube()) {
+				if (heldBlock != null && heldBlock != Blocks.air) {
+					if (heldBlock instanceof BlockAntiBuilder) {
+						heldBlock = null;
+					}
+
 					if (te != null) {
 						te.facadeBlock = heldBlock;
 						te.facadeMeta = heldItem.getItemDamage();
