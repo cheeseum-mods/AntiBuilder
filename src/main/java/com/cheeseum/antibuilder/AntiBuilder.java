@@ -87,7 +87,7 @@ public class AntiBuilder
         // Network Handlers
         network = NetworkRegistry.INSTANCE.newSimpleChannel("AntiBuilder");
         network.registerMessage(AntiBuilderMsgUpdate.Handler.class, AntiBuilderMsgUpdate.class, 0, Side.SERVER);
-        network.registerMessage(AntiBuilderMsgPreventBuild.Handler.class, AntiBuilderMsgPreventBuild.class, 0, Side.CLIENT);
+        network.registerMessage(AntiBuilderMsgPreventBuild.Handler.class, AntiBuilderMsgPreventBuild.class, 1, Side.CLIENT);
         
         // Register GUI(s)
         NetworkRegistry.INSTANCE.registerGuiHandler(this.instance, new AntiBuilderGuiHandler());
